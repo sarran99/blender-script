@@ -9,7 +9,7 @@ export default function Sidebar({
   startNewChat,
   showSearchPage,
   setShowSearchPage,
-  loadChat // <-- NEW PROP ADDED HERE
+  loadChat 
 }) {
 
   // Safely separate the active chat from the older "Recent" chats
