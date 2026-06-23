@@ -1,5 +1,5 @@
 import { Plus, Search, PanelLeftClose } from 'lucide-react';
-import logoImg from 'C:/blender UI/frontend/src/assets/Tessolve.png';
+import logoImg from '../assets/Tessolve.png';
 
 export default function Sidebar({
   sidebarOpen,
