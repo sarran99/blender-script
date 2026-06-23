@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { Menu, Sun, Moon, Send,MessageSquare, Clock, Search, PanelLeft } from 'lucide-react';
-import logoImg from 'C:/blender UI/frontend/src/assets/Tessolve.png';
+import { Menu, Sun, Moon, Send, MessageSquare, Clock, Search, PanelLeft } from 'lucide-react';
+import ModelInfoIcon from './ModelInfoIcon';
+import logoImg from '../assets/Tessolve.png'; 
 
 export default function MainPage({
   sidebarOpen,
@@ -21,12 +22,10 @@ export default function MainPage({
   const [searchTerm, setSearchTerm] = useState('');
   const textareaRef = useRef(null);
 
-  // Dynamic search filtering for the history log catalog grid
   const filteredHistory = chatHistory.filter(chat => 
-    chat.title.toLowerCase().includes(searchTerm.toLowerCase())
+    chat.title?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Auto-grow text box height logic as the paragraph length changes
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
@@ -35,27 +34,22 @@ export default function MainPage({
   }, [inputMessage]);
 
   const onSubmit = (e) => {
+    e.preventDefault();
+    if (!inputMessage.trim()) return;
     handleSendMessage(e);
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
     }
   };
 
-  // Helper function to format the timestamp cleanly into Indian Standard Time (IST)
   const formatChatDate = (dateString) => {
     if (!dateString) return 'Unknown Date';
     try {
       const utcString = dateString.endsWith('Z') ? dateString : `${dateString}Z`;
       const date = new Date(utcString);
-      
       return date.toLocaleDateString('en-IN', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-        timeZone: 'Asia/Kolkata'
+        day: 'numeric', month: 'short', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata'
       });
     } catch (e) {
       console.error("Error occurred:", e);
@@ -66,11 +60,9 @@ export default function MainPage({
   return (
     <main className="flex-1 flex flex-col h-full relative w-full overflow-hidden transition-all duration-300">
       
-      {/* Top Header Row Panel */}
-      <header className="h-16 flex items-center justify-between px-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-brandBlue-dark shrink-0">
+      <header className="h-16 flex items-center justify-between px-4 bg-slate-50 dark:bg-slate-950 shrink-0">
         <div className="flex items-center gap-2">
           
-          {/* MOBILE TOGGLE BUTTON */}
           <button 
             className="md:hidden p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md text-slate-600 dark:text-slate-300 cursor-pointer" 
             onClick={() => setSidebarOpen(true)}
@@ -78,7 +70,6 @@ export default function MainPage({
             <Menu size={24} />
           </button>
 
-          {/* DESKTOP OPEN SIDEBAR TOGGLE */}
           {!sidebarOpen && (
             <button 
               onClick={() => setSidebarOpen(true)}
@@ -89,18 +80,17 @@ export default function MainPage({
             </button>
           )}
 
-          {/* CONDITIONAL LOGO */}
+          {/* RESTORED IMAGE LOGO */}
           {!sidebarOpen && (
             <img 
               src={logoImg} 
-              alt="Tessolve Logo Global" 
-              className="h-9 w-auto object-contain max-w-[140px] mr-2 cursor-pointer transition-all animate-fade-in"
+              alt="Tessolve Logo" 
+              className="h-10 w-auto object-contain cursor-pointer ml-1"
               onClick={() => setSidebarOpen(true)}
             />
           )}
         </div>
 
-        {/* Accessibility Theme Toggles */}
         <button 
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} 
           className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 cursor-pointer"
@@ -111,7 +101,7 @@ export default function MainPage({
 
       {/* Switchable Workspace Layout views */}
       {showSearchPage ? (
-        <div className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50 dark:bg-brandBlue-dark/40">
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50 dark:bg-slate-950">
           <div className="max-w-4xl mx-auto space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
               <div>
@@ -124,7 +114,7 @@ export default function MainPage({
                   placeholder="Search by keywords" 
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brandOrange text-slate-800 dark:text-white shadow-sm" 
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#f47920] text-slate-800 dark:text-white shadow-sm" 
                 />
               </div>
             </div>
@@ -137,10 +127,10 @@ export default function MainPage({
                   <div 
                     key={chat.id}
                     onClick={() => loadChat(chat.id)}
-                    className="p-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:border-brandOrange dark:hover:border-brandOrange cursor-pointer transition-all hover:shadow-md group flex flex-col justify-between h-32"
+                    className="p-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:border-[#f47920] dark:hover:border-[#f47920] cursor-pointer transition-all hover:shadow-md group flex flex-col justify-between h-32"
                   >
                     <div className="flex items-start gap-3">
-                      <MessageSquare size={18} className="text-brandBlue mt-0.5 group-hover:text-brandOrange transition-colors shrink-0" />
+                      <MessageSquare size={18} className="text-[#0082c8] mt-0.5 group-hover:text-[#f47920] transition-colors shrink-0" />
                       <h3 className="font-semibold text-slate-800 dark:text-slate-100 text-[15px] line-clamp-2 leading-snug">{chat.title}</h3>
                     </div>
                     <div className="flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-500">
@@ -154,30 +144,37 @@ export default function MainPage({
           </div>
         </div>
       ) : messages.length === 0 ? (
-        <div className="flex-1 overflow-y-auto p-4 md:p-8 flex flex-col items-center justify-center opacity-40 bg-slate-50 dark:bg-brandBlue-dark">
-           <h2 className="text-3xl font-bold text-center">Ready to generate Blender scripts</h2>
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 relative">
+          
+          {/* Balanced Halo Glow Layer (Reduced Intensity) 
+          <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+            <div className="w-full max-w-3xl h-48 sm:h-64 rounded-[100%] bg-blue-300 dark:bg-[#0082c8] opacity-50 dark:opacity-20 blur-[80px] md:blur-[100px]"></div>
+          </div> */}
+
+          {/* Text Layer - Matches Chat Box Placeholder font and color exactly */}
+          <div className="relative z-10 text-center">
+             <h2 className="text-5xl md:text-3xl font-normal tracking-wide text-slate-300 dark:text-slate-700">
+              Ready to generate Blender script
+            </h2>
+          </div>
+          
         </div>
       ) : (
-        /* --- CHAT FEED WINDOW --- */
-        <div className="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth bg-slate-50 dark:bg-brandBlue-dark">
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 scroll-smooth bg-slate-50 dark:bg-slate-950">
           <div className="max-w-3xl mx-auto space-y-6">
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                
                 {msg.role === 'user' ? (
-                  /* User Message Bubble Style */
-                  <div className="max-w-[75%] bg-brandBlue text-white rounded-2xl rounded-br-none px-4 py-3 shadow-sm text-[15px] leading-relaxed whitespace-pre-wrap">
+                  <div className="max-w-[75%] bg-[#0082c8] text-white rounded-2xl rounded-br-none px-4 py-3 shadow-sm text-[15px] leading-relaxed whitespace-pre-wrap">
                     {msg.content}
                   </div>
                 ) : (
-                  /* Model Message Bubble Style - Fully Theme Adaptive */
                   <div className="max-w-[85%] w-full sm:w-auto text-[15px] leading-relaxed animate-fade-in">
-                    <pre className="whitespace-pre-wrap font-mono text-sm p-5 rounded-2xl rounded-bl-none overflow-x-auto border border-slate-200 dark:border-slate-800/60 shadow-sm w-full bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-100">
+                    <pre className="whitespace-pre-wrap font-mono text-sm p-5 rounded-2xl rounded-bl-none overflow-x-auto border border-slate-200 dark:border-slate-800/60 shadow-sm w-full bg-white text-slate-800 dark:bg-slate-900 dark:text-slate-100">
                       <code>{msg.content}</code>
                     </pre>
                   </div>
                 )}
-
               </div>
             ))}
             <div ref={messagesEndRef} />
@@ -185,17 +182,21 @@ export default function MainPage({
         </div>
       )}
 
-      {/* --- CAPSULE CHAT CONSOLE INPUT FOOTER --- */}
       {!showSearchPage && (
-        <div className="p-6 bg-white dark:bg-brandBlue-dark border-t border-slate-200 dark:border-slate-800 shrink-0">
-          <div className="max-w-3xl mx-auto">
-            
-            <form 
-              onSubmit={onSubmit} 
-              className="w-full bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-3xl px-4 py-2.5 flex items-end justify-between gap-2 shadow-sm focus-within:border-brandOrange focus-within:ring-1 focus-within:ring-brandOrange transition-all duration-200"
-            >
+        
+        <div className="p-6 bg-slate-50 dark:bg-slate-950 shrink-0">
+          {/* WIDENED WRAPPER: Changed to max-w-4xl and added Flexbox to hold the icon and form side-by-side */}
+          <div className="max-w-3xl mx-auto relative flex items-end px-2 md:px-0">
 
-              {/* Auto expanding chat box */}
+          {/* Infoicon */}
+          <form 
+            onSubmit={onSubmit} 
+            className="flex-1 w-full bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-3xl px-4 py-2.5 flex items-end justify-between gap-2 shadow-sm focus-within:border-[#f47920] focus-within:ring-1 focus-within:ring-[#f47920] transition-all duration-200"
+          >
+              <div className="pb-2.5 shrink-0 pl-1">
+                <ModelInfoIcon />
+              </div>
+
               <textarea
                 ref={textareaRef}
                 value={inputMessage}
@@ -211,24 +212,15 @@ export default function MainPage({
                 }}
               />
 
-              {/* buttons in right side of chatbox  */}
               <div className="flex items-center gap-3 shrink-0 h-10 mb-0.5">
-                
                 <div className="relative flex items-center bg-transparent">
                   <select 
                     value={selectedModel}
                     onChange={(e) => setSelectedModel(e.target.value)}
-                    className="bg-transparent text-sm font-medium text-slate-600 dark:text-slate-300 focus:outline-none cursor-pointer pr-1 hover:text-brandOrange transition-colors appearance-none"
+                    className="bg-transparent text-sm font-medium text-slate-600 dark:text-slate-300 focus:outline-none cursor-pointer pr-1 hover:text-[#f47920] transition-colors appearance-none"
                   >
-                    
-                    
-                    {/* to add new model in the model selector, 
-                        add a new line like the line below     */}
                     <option value="qwen-2.5-coder" className="bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white">qwen 2.5 coder</option>
                     <option value="qwen-2.6-coder" className="bg-white dark:bg-slate-900 text-sm text-slate-900 dark:text-white">qwen 2.6 coder</option>
-                    
-            
-                  
                   </select>
                   <div className="h-2 w-2 rotate-45 border-b-2 border-r-2 border-slate-400 dark:border-slate-500" />
                 </div>
@@ -238,15 +230,13 @@ export default function MainPage({
                 <button 
                   type="submit" 
                   disabled={!inputMessage.trim()} 
-                  className="p-2 text-brandOrange hover:text-brandOrange-hover disabled:text-slate-300 dark:disabled:text-slate-600 transition-colors cursor-pointer flex items-center justify-center rounded-full"
+                  className="p-2 text-[#f47920] hover:opacity-80 disabled:text-slate-300 dark:disabled:text-slate-600 transition-colors cursor-pointer flex items-center justify-center rounded-full"
                   title="Send Message"
                 >
                   <Send size={18} />
                 </button>
-                
               </div>
             </form>
-            
           </div>
         </div>
       )}
