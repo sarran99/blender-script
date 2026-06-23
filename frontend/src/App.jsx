@@ -87,6 +87,7 @@ export default function App() {
         startNewChat={startNewChat}
         showSearchPage={showSearchPage}
         setShowSearchPage={setShowSearchPage}
+        loadChat={loadChat}
       />
 
       {/* Main Content Component */}
